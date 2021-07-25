@@ -1,16 +1,15 @@
 package prj02Lists;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TodoListProgram {
-    private static ArrayList<String> todoList = new ArrayList<>() {{
+    private static final ArrayList<String> todoList = new ArrayList<>() {{
         add("learn oop java");
         add("cook the dinner");
         add("go to the training");
     }};
-    private static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         while (true) {
@@ -81,7 +80,7 @@ public class TodoListProgram {
     private static String getTaskTextInCommand(String userInput) {
         String taskText = "";
         int indexFirstSpace = userInput.indexOf(" ");
-        int indexSecondSpace = -1;
+        int indexSecondSpace;
         if (indexFirstSpace > 0) {
             indexSecondSpace = userInput.indexOf(" ", indexFirstSpace + 1);
             if (indexSecondSpace > indexFirstSpace) {
@@ -92,14 +91,13 @@ public class TodoListProgram {
             if(getCommandName(userInput).compareToIgnoreCase("add") == 0 && getTaskNumberInCommand(userInput) == -1)
                 taskText = userInput.substring(indexFirstSpace + 1);
         }
-        System.out.println(taskText);
         return taskText;
     }
 
     private static int getTaskNumberInCommand(String userInput) {
         int firstSpaceIndex = userInput.indexOf(" ");
-        int secondSpaceIndex = -1;
-        String possibleIndex = "";
+        int secondSpaceIndex;
+        String possibleIndex;
         if (firstSpaceIndex > 0) {
             secondSpaceIndex = userInput.indexOf(" ", firstSpaceIndex + 1);
         } else {
@@ -124,7 +122,7 @@ public class TodoListProgram {
     }
 
     private static String getCommandName(String userInput) {
-        String commandName = "ERROR_COMMAND";
+        String commandName;
         int indexSpace = userInput.indexOf(" ");
         if (indexSpace > 0) {
             commandName = userInput.substring(0, indexSpace);
