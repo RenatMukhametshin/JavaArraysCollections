@@ -1,5 +1,6 @@
 package prj02Lists;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -41,8 +42,8 @@ public class TodoListProgram {
     }
 
     private static void deleteList(String userInput) {
-        int indexTaskForDelete = getIndexInCommand(userInput);
-        if( indexTaskForDelete > todoList.size() || indexTaskForDelete <= 0 || todoList.size() == 0){
+        int indexTaskForDelete = getTaskNumberInCommand(userInput);
+        if (indexTaskForDelete > todoList.size() || indexTaskForDelete <= 0 || todoList.size() == 0) {
             System.out.println("Cannot delete task " + indexTaskForDelete);
         } else {
             System.out.println("Deleted task " + indexTaskForDelete + " - " + todoList.get(indexTaskForDelete - 1));
@@ -51,19 +52,51 @@ public class TodoListProgram {
     }
 
     private static void editList(String userInput) {
-        System.out.println("do edit command...");
-        int indexTaskForEdit = getIndexInCommand(userInput);
-        System.out.println(indexTaskForEdit);
-
+        int indexTaskForEdit = getTaskNumberInCommand(userInput);
+        if (indexTaskForEdit > todoList.size() || indexTaskForEdit <= 0 || todoList.size() == 0) {
+            System.out.println("Cannot edit task " + indexTaskForEdit);
+        } else {
+            String textTask = getTaskTextInCommand(userInput);
+            System.out.println("Edited task " + indexTaskForEdit + " - " + todoList.get(indexTaskForEdit - 1));
+            todoList.set(indexTaskForEdit - 1, textTask);
+        }
     }
 
     private static void addList(String userInput) {
-        System.out.println("do add command...");
-        int indexTaskForAdd = getIndexInCommand(userInput);
-        System.out.println(indexTaskForAdd);
+        int indexTaskForAdd = getTaskNumberInCommand(userInput);
+        String textTask = getTaskTextInCommand(userInput);
+        if (textTask.length() != 0) {
+            if (indexTaskForAdd > todoList.size() || todoList.size() == 0 || indexTaskForAdd == -1) {
+                todoList.add(textTask);
+            } else {
+                todoList.add(indexTaskForAdd - 1, textTask);
+            }
+            System.out.println("added task");
+        } else {
+            System.out.println("cannot added task");
+        }
     }
 
-    private static int getIndexInCommand(String userInput) {
+
+    private static String getTaskTextInCommand(String userInput) {
+        String taskText = "";
+        int indexFirstSpace = userInput.indexOf(" ");
+        int indexSecondSpace = -1;
+        if (indexFirstSpace > 0) {
+            indexSecondSpace = userInput.indexOf(" ", indexFirstSpace + 1);
+            if (indexSecondSpace > indexFirstSpace) {
+                taskText = userInput.substring(indexSecondSpace + 1);
+            } else {
+                taskText = userInput.substring(indexFirstSpace + 1);
+            }
+            if(getCommandName(userInput).compareToIgnoreCase("add") == 0 && getTaskNumberInCommand(userInput) == -1)
+                taskText = userInput.substring(indexFirstSpace + 1);
+        }
+        System.out.println(taskText);
+        return taskText;
+    }
+
+    private static int getTaskNumberInCommand(String userInput) {
         int firstSpaceIndex = userInput.indexOf(" ");
         int secondSpaceIndex = -1;
         String possibleIndex = "";
