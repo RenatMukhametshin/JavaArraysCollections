@@ -1,8 +1,14 @@
 package prj01Arrays;
 
 public class HospitalTemp {
+    public static final int COUNT_PATIENTS = 90;
+    public static final int MIN_TEMP = 32;
+    public static final int MAX_TEMP = 40;
+    public static final double MIN_TEMP_HEALTHY = 36.2;
+    public static final double MAX_TEMP_HEALTHY = 36.9;
+
     public static void main(String[] args) {
-        double[] patientsTemps = new double[90];
+        double[] patientsTemps = new double[COUNT_PATIENTS];
         generateTemps(patientsTemps);
         printTemps(patientsTemps);
         System.out.println("Average temp : " + String.format("%.1f", getAverageTemp(patientsTemps)).replace(',', '.'));
@@ -12,7 +18,7 @@ public class HospitalTemp {
 
     public static void generateTemps(double[] array) {
         for (int i = 0; i < array.length; i++) {
-            double temp = 32.0 + 8 * Math.random();
+            double temp = MIN_TEMP + (MAX_TEMP - MIN_TEMP) * Math.random();
             temp = Math.floor(temp * 10) / 10;
             array[i] = temp;
         }
@@ -42,7 +48,7 @@ public class HospitalTemp {
     public static String getHealthyPatientTemp(double[] array) {
         StringBuilder stringBuilder = new StringBuilder();
         for (double temp : array) {
-            if (temp >= 36.2 && temp <= 36.9) {
+            if (temp >= MIN_TEMP_HEALTHY && temp <= MAX_TEMP_HEALTHY) {
                 stringBuilder.append(temp + " ");
             }
         }
@@ -52,7 +58,7 @@ public class HospitalTemp {
     public static int countHealthyPatient(double[] array) {
         int count = 0;
         for (int i = 0; i < array.length; i++) {
-            if (array[i] >= 36.2 && array[i] <= 36.9) {
+            if (array[i] >= MIN_TEMP_HEALTHY && array[i] <= MAX_TEMP_HEALTHY) {
                 count++;
             }
         }
