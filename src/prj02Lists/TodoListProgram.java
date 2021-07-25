@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class TodoListProgram {
-    public static ArrayList<String> todoList = new ArrayList<>() {{
+    private static ArrayList<String> todoList = new ArrayList<>() {{
         add("learn oop java");
         add("cook the dinner");
         add("go to the training");
     }};
-    public static Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         while (true) {
@@ -23,7 +23,7 @@ public class TodoListProgram {
         }
     }
 
-    public static void doCommand(String userInput) {
+    private static void doCommand(String userInput) {
         String commandName = getCommandName(userInput);
         if (commandName.compareToIgnoreCase("error_command") == 0) {
             System.out.println("Error the command. Please type the right command.");
@@ -40,21 +40,48 @@ public class TodoListProgram {
         }
     }
 
-    private static void deleteList(String userInput)
-    {
-        System.out.println("do delete command....");
+    private static void deleteList(String userInput) {
+        int indexTaskForDelete = getIndexInCommand(userInput);
+        if( indexTaskForDelete > todoList.size() || indexTaskForDelete <= 0 || todoList.size() == 0){
+            System.out.println("Cannot delete task " + indexTaskForDelete);
+        } else {
+            System.out.println("Deleted task " + indexTaskForDelete + " - " + todoList.get(indexTaskForDelete - 1));
+            todoList.remove(indexTaskForDelete - 1);
+        }
     }
 
     private static void editList(String userInput) {
         System.out.println("do edit command...");
+        int indexTaskForEdit = getIndexInCommand(userInput);
+        System.out.println(indexTaskForEdit);
+
     }
 
     private static void addList(String userInput) {
         System.out.println("do add command...");
-//        int indexFirstS
-//        int indexFirstSpace = userInput.indexOf(" ", 0);
-//        int indexSecondSpace = userInput.indexOf(" ")
+        int indexTaskForAdd = getIndexInCommand(userInput);
+        System.out.println(indexTaskForAdd);
+    }
 
+    private static int getIndexInCommand(String userInput) {
+        int firstSpaceIndex = userInput.indexOf(" ");
+        int secondSpaceIndex = -1;
+        String possibleIndex = "";
+        if (firstSpaceIndex > 0) {
+            secondSpaceIndex = userInput.indexOf(" ", firstSpaceIndex + 1);
+        } else {
+            return -1;
+        }
+        if (secondSpaceIndex > firstSpaceIndex) {
+            possibleIndex = userInput.substring(firstSpaceIndex + 1, secondSpaceIndex);
+        } else {
+            possibleIndex = userInput.substring(firstSpaceIndex + 1);
+        }
+        if (possibleIndex.matches("\\d+")) {
+            return Integer.parseInt(possibleIndex);
+        } else {
+            return -1;
+        }
     }
 
     private static void showList() {
@@ -63,7 +90,7 @@ public class TodoListProgram {
         }
     }
 
-    public static String getCommandName(String userInput) {
+    private static String getCommandName(String userInput) {
         String commandName = "ERROR_COMMAND";
         int indexSpace = userInput.indexOf(" ");
         if (indexSpace > 0) {
@@ -78,7 +105,7 @@ public class TodoListProgram {
         return commandName;
     }
 
-    public static void showMenu() {
+    private static void showMenu() {
         int count = todoList.size();
         System.out.println("Todolist has " + count + " tasks.");
         System.out.println("Please type the command:");
